@@ -1,8 +1,16 @@
 package com.atabekdev.mytaxitest.ui.screens
 
 import android.content.res.Resources
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,19 +27,24 @@ import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.atabekdev.mytaxitest.R
@@ -43,6 +56,7 @@ import com.atabekdev.mytaxitest.ui.components.SwitchStatus
 import com.mapbox.geojson.Point
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,6 +69,16 @@ fun MapScreen(
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = true)
     )
+
+    val coroutineScope = rememberCoroutineScope()
+
+    // State to track the visibility of the Row with cards
+    val isRowVisible by remember {
+        derivedStateOf {
+            scaffoldState.bottomSheetState.currentValue != SheetValue.Expanded
+        }
+    }
+
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContainerColor = Color.Transparent,
@@ -63,9 +87,21 @@ fun MapScreen(
         sheetPeekHeight = 200.dp, // Adjust this value to set initial peek height
         sheetDragHandle = { BottomSheetDefaults.DragHandle(modifier = Modifier.padding(top = 30.dp)) }
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier
+            .fillMaxSize()) {
             MapboxMap(
-                Modifier.fillMaxSize(),
+                Modifier.fillMaxSize().pointerInput(Unit) {
+                    Log.d("TTTT", "Click!")
+                    detectTapGestures {
+                        coroutineScope.launch {
+                            if (scaffoldState.bottomSheetState.hasExpandedState) {
+                                scaffoldState.bottomSheetState.partialExpand()
+                            } else {
+                                scaffoldState.bottomSheetState.expand()
+                            }
+                        }
+                    }
+                },
                 mapViewportState = MapViewportState().apply {
                     setCameraOptions {
                         zoom(14.0)
@@ -145,14 +181,31 @@ fun MapScreen(
                         .padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    LiftBottomSheetCard(onClick = {
-                    })
-                    Column {
-                        MainCard(R.drawable.ic_plus)
-                        Spacer(modifier = Modifier.height(16.dp))
-                        MainCard(R.drawable.ic_minus)
-                        Spacer(modifier = Modifier.height(16.dp))
-                        MainCard(R.drawable.ic_navigation)
+                    AnimatedVisibility(
+                        visible = isRowVisible,
+                        enter = slideInHorizontally { it / 2 } + fadeIn(),
+                        exit = slideOutHorizontally { it / 2 } + fadeOut()
+                    ) {
+                        LiftBottomSheetCard(
+                            onClick = {
+                                coroutineScope.launch {
+                                    scaffoldState.bottomSheetState.expand()
+                                }
+                            },
+                        )
+                    }
+                    AnimatedVisibility(
+                        visible = isRowVisible,
+                        enter = slideInHorizontally { -it / 2 } + fadeIn(),
+                        exit = slideOutHorizontally { -it / 2 } + fadeOut()
+                    ) {
+                        Column {
+                            MainCard(R.drawable.ic_plus)
+                            Spacer(modifier = Modifier.height(16.dp))
+                            MainCard(R.drawable.ic_minus)
+                            Spacer(modifier = Modifier.height(16.dp))
+                            MainCard(R.drawable.ic_navigation)
+                        }
                     }
                 }
             }
