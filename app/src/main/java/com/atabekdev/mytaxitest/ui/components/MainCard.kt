@@ -45,7 +45,8 @@ fun MainCard(resId: Int) {
 @Composable
 fun LiftBottomSheetCard(onClick: () -> Unit) {
     Card(
-        modifier = Modifier.size(56.dp)
+        modifier = Modifier
+            .size(56.dp)
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
             containerColor = Color(0xE6FFFFFF),
