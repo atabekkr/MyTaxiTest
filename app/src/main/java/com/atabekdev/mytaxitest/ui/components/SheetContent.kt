@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,14 +35,14 @@ fun SheetContent() {
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
         ) {
             Column(
                 modifier = Modifier
                     .height(200.dp)
                     .padding(vertical = 12.dp, horizontal = 16.dp)
                     .background(
-                        Color(0xFFF5F6F9),
+                        MaterialTheme.colorScheme.secondary,
                         shape = RoundedCornerShape(16.dp)
                     )
             ) {
@@ -71,21 +72,13 @@ fun SheetCard(title: String, number: String, resId: Int) {
         )
         Text(
             text = title,
-            style = TextStyle(
-                fontSize = 18.sp,
-                color = Color(0xff121212),
-                fontWeight = FontWeight(600)
-            ),
+            style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(end = 8.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
             text = number,
-            style = TextStyle(
-                fontSize = 18.sp,
-                color = Color(0xff818AB0),
-                fontWeight = FontWeight(600)
-            ),
+            style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(end = 8.dp)
         )
         Image(

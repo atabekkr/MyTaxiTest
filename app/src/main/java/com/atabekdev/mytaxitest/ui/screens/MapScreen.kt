@@ -27,6 +27,7 @@ import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
@@ -67,7 +68,7 @@ fun MapScreen(
 ) {
 
     val scaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = true)
+        bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = false)
     )
 
     val coroutineScope = rememberCoroutineScope()
@@ -127,7 +128,7 @@ fun MapScreen(
                     Card(
                         modifier = Modifier.size(56.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = Color.White,
+                            containerColor = MaterialTheme.colorScheme.background,
                         ),
                         shape = RoundedCornerShape(14.dp),
                         onClick = {}
@@ -151,7 +152,7 @@ fun MapScreen(
                     Card(
                         modifier = Modifier.size(56.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = Color.White,
+                            containerColor = MaterialTheme.colorScheme.background,
                         ),
                         shape = RoundedCornerShape(14.dp),
                         onClick = {}
@@ -166,10 +167,7 @@ fun MapScreen(
                         ) {
                             Text(
                                 text = "95",
-                                style = TextStyle(
-                                    fontSize = 20.sp,
-                                    fontFamily = FontFamily(Font(R.font.font_lato_bold))
-                                )
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         }
                     }

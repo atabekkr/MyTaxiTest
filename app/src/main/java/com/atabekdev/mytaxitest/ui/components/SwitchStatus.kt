@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,12 +32,13 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.atabekdev.mytaxitest.ui.theme.Green
+import com.atabekdev.mytaxitest.ui.theme.MainTypography
+import com.atabekdev.mytaxitest.ui.theme.SwitchRed
+import com.atabekdev.mytaxitest.ui.theme.White
 
 @Composable
 fun SwitchStatus(modifier: Modifier = Modifier) {
@@ -83,7 +85,7 @@ private fun TextSwitch(
             .fillMaxWidth()
             .height(56.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .padding(4.dp)
     ) {
         if (items.isNotEmpty()) {
@@ -112,8 +114,8 @@ private fun TextSwitch(
 
                     // This is for setting black tex while drawing on white background
                     val padding = 8.dp.toPx()
-                    val bgColor = if (selectedIndex == 0) Color(0xFFFA4444) else Color(0xFF80ED99)
-                    val textBgColor = if (selectedIndex == 0) Color.White else Color.Black
+                    val bgColor = if (selectedIndex == 0) SwitchRed else Green
+                    val textBgColor = if (selectedIndex == 0) White else MainTypography
                     drawRoundRect(
                         topLeft = Offset(x = indicatorOffset.toPx() + padding, padding),
                         size = Size(size.width / 2 - padding * 2, size.height - padding * 2),
@@ -154,8 +156,8 @@ private fun TextSwitch(
                     ) {
                         Text(
                             text = text,
-                            fontSize = 18.sp,
-                            color = Color(0xff121212))
+                            style = MaterialTheme.typography.titleSmall
+                        )
                     }
                 }
             }
