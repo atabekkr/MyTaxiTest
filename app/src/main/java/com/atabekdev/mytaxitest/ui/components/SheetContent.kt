@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -29,30 +30,29 @@ import com.atabekdev.mytaxitest.R
 @Preview
 @Composable
 fun SheetContent() {
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
-    ) {
-        Column(
+        Box(
             modifier = Modifier
-                .height(200.dp)
-                .padding(vertical = 12.dp, horizontal = 16.dp)
-                .background(
-                    Color(0xFFF5F6F9),
-                    shape = RoundedCornerShape(16.dp)
-                )
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                .background(Color.White)
         ) {
-            SheetCard(title = "Tarif", number = "6/8", R.drawable.ic_tariff)
-            HorizontalDivider(Modifier.padding(horizontal = 16.dp))
-            SheetCard(title = "Buyurtmalar", number = "0", R.drawable.ic_order)
-            HorizontalDivider(Modifier.padding(horizontal = 16.dp))
-            SheetCard(title = "Bordur", number = "", R.drawable.ic_rocket)
+            Column(
+                modifier = Modifier
+                    .height(200.dp)
+                    .padding(vertical = 12.dp, horizontal = 16.dp)
+                    .background(
+                        Color(0xFFF5F6F9),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+            ) {
+                SheetCard(title = "Tarif", number = "6/8", R.drawable.ic_tariff)
+                HorizontalDivider(Modifier.padding(horizontal = 16.dp))
+                SheetCard(title = "Buyurtmalar", number = "0", R.drawable.ic_order)
+                HorizontalDivider(Modifier.padding(horizontal = 16.dp))
+                SheetCard(title = "Bordur", number = "", R.drawable.ic_rocket)
+            }
         }
     }
-}
 
 @Composable
 fun SheetCard(title: String, number: String, resId: Int) {
