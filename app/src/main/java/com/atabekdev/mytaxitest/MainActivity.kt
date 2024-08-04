@@ -14,19 +14,24 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +46,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.atabekdev.mytaxitest.ui.components.AddPointer
+import com.atabekdev.mytaxitest.ui.components.LiftBottomSheetCard
+import com.atabekdev.mytaxitest.ui.components.MainCard
+import com.atabekdev.mytaxitest.ui.components.SheetContent
 import com.atabekdev.mytaxitest.ui.components.SwitchStatus
 import com.atabekdev.mytaxitest.ui.theme.MyTaxiTestTheme
 import com.google.android.gms.location.LocationServices
@@ -89,7 +97,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun MapScreen(userLocation: Point?, initialPoint: Point, resources: Resources) {
+private fun MapScreen(
+    userLocation: Point?,
+    initialPoint: Point,
+    resources: Resources,
+) {
+
     Box(modifier = Modifier.fillMaxSize()) {
         MapboxMap(
             Modifier.fillMaxSize(),
@@ -165,6 +178,23 @@ private fun MapScreen(userLocation: Point?, initialPoint: Point, resources: Reso
                     }
                 }
             }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                LiftBottomSheetCard(onClick = {
+                })
+                Column {
+                    MainCard(R.drawable.ic_plus)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    MainCard(R.drawable.ic_minus)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    MainCard(R.drawable.ic_navigation)
+                }
+            }
+            SheetContent()
         }
     }
 }
