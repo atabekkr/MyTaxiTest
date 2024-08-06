@@ -99,7 +99,6 @@ private fun TextSwitch(
                 label = "indicator offset"
             )
 
-            // This is for shadow layer matching white background
             Box(
                 modifier = Modifier
                     .offset(x = indicatorOffset)
@@ -112,7 +111,6 @@ private fun TextSwitch(
 
                 .drawWithContent {
 
-                    // This is for setting black tex while drawing on white background
                     val padding = 8.dp.toPx()
                     val bgColor = if (selectedIndex == 0) SwitchRed else Green
                     val textBgColor = if (selectedIndex == 0) White else MainTypography
@@ -126,7 +124,6 @@ private fun TextSwitch(
                     drawWithLayer {
                         drawContent()
 
-                        // This is white top rounded rectangle
                         drawRoundRect(
                             topLeft = Offset(x = indicatorOffset.toPx(), 0f),
                             size = Size(size.width / 2, size.height),

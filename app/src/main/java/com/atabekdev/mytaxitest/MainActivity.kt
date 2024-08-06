@@ -1,6 +1,8 @@
 package com.atabekdev.mytaxitest
 
+import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -14,37 +16,38 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import com.atabekdev.mytaxitest.common.service.LocationService
 import com.atabekdev.mytaxitest.ui.screens.MapScreen
 import com.atabekdev.mytaxitest.ui.theme.MyTaxiTestTheme
 import com.google.android.gms.location.LocationServices
 import com.mapbox.geojson.Point
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyTaxiTestTheme {
-                // A surface container using the 'background' color from the theme
                 val context = LocalContext.current
                 var userLocation by remember { mutableStateOf<Point?>(null) }
 
-                // Create a permission launcher
                 val requestPermissionLauncher =
                     rememberLauncherForActivityResult(
                         contract = ActivityResultContracts.RequestPermission(),
                         onResult = { isGranted: Boolean ->
                             if (isGranted) {
-                                // Permission granted, update the location
-                                getCurrentLocation(context) { lat, long ->
-                                    userLocation = Point.fromLngLat(long, lat)
-                                }
                             }
                         })
 
                 LaunchedEffect(Unit) {
                     if (!hasLocationPermission(context)) {
-                        requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+                        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                     } else {
+                        Intent(this@MainActivity, LocationService::class.java).apply {
+                            action = LocationService.ACTION_START
+                            this@MainActivity.startService(this)
+                        }
                         getCurrentLocation(context) { lat, long ->
                             userLocation = Point.fromLngLat(long, lat)
                         }
@@ -58,10 +61,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+private fun checkPermission() {
+}
+
 private fun hasLocationPermission(context: Context): Boolean {
     return ContextCompat.checkSelfPermission(
         context,
-        android.Manifest.permission.ACCESS_FINE_LOCATION
+        Manifest.permission.ACCESS_FINE_LOCATION
     ) == PackageManager.PERMISSION_GRANTED
 }
 
@@ -76,7 +83,6 @@ private fun getCurrentLocation(context: Context, callback: (Double, Double) -> U
             }
         }
         .addOnFailureListener { exception ->
-            // Handle location retrieval failure
             exception.printStackTrace()
         }
 }

@@ -18,7 +18,7 @@ fun AddPointer(point: Point, resources: Resources) {
         R.drawable.marker_car,
         null
     )
-    val bitmap = drawable!!.toBitmap(
+    val bitmap = drawable?.toBitmap(
         drawable.intrinsicWidth,
         drawable.intrinsicHeight,
         Bitmap.Config.ARGB_8888

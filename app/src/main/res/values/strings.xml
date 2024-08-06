@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">MyTaxiTest</string>
     <string name="mapbox_access_token">pk.eyJ1IjoiYXRhYmVra3IiLCJhIjoiY2x6Y3hjOHlqMDI2cTJpczg4NzVqczBiMSJ9.gSmUp2-n5sZRIiiVCEyWjA</string>
+    <string name="tracking_location">Tracking location…</string>
+    <string name="your_location">Локация: (%1$s, %2$s)</string>
+    <string name="location_tracker">Location tracker</string>
+    <string name="location_tracker_description">This channel is used to show notification when tracking location.</string>
 </resources>

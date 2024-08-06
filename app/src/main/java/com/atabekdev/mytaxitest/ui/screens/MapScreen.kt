@@ -9,7 +9,6 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,17 +42,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.atabekdev.mytaxitest.R
 import com.atabekdev.mytaxitest.ui.components.AddPointer
 import com.atabekdev.mytaxitest.ui.components.LiftBottomSheetCard
 import com.atabekdev.mytaxitest.ui.components.MainCard
 import com.atabekdev.mytaxitest.ui.components.SheetContent
 import com.atabekdev.mytaxitest.ui.components.SwitchStatus
+import com.atabekdev.mytaxitest.ui.theme.Green
 import com.mapbox.geojson.Point
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
@@ -73,7 +69,6 @@ fun MapScreen(
 
     val coroutineScope = rememberCoroutineScope()
 
-    // State to track the visibility of the Row with cards
     val isRowVisible by remember {
         derivedStateOf {
             scaffoldState.bottomSheetState.currentValue != SheetValue.Expanded
@@ -88,21 +83,25 @@ fun MapScreen(
         sheetPeekHeight = 200.dp, // Adjust this value to set initial peek height
         sheetDragHandle = { BottomSheetDefaults.DragHandle(modifier = Modifier.padding(top = 30.dp)) }
     ) {
-        Box(modifier = Modifier
-            .fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
             MapboxMap(
-                Modifier.fillMaxSize().pointerInput(Unit) {
-                    Log.d("TTTT", "Click!")
-                    detectTapGestures {
-                        coroutineScope.launch {
-                            if (scaffoldState.bottomSheetState.hasExpandedState) {
-                                scaffoldState.bottomSheetState.partialExpand()
-                            } else {
-                                scaffoldState.bottomSheetState.expand()
+                Modifier
+                    .fillMaxSize()
+                    .pointerInput(Unit) {
+                        Log.d("TTTT", "Click!")
+                        detectTapGestures {
+                            coroutineScope.launch {
+                                if (scaffoldState.bottomSheetState.hasExpandedState) {
+                                    scaffoldState.bottomSheetState.partialExpand()
+                                } else {
+                                    scaffoldState.bottomSheetState.expand()
+                                }
                             }
                         }
-                    }
-                },
+                    },
                 mapViewportState = MapViewportState().apply {
                     setCameraOptions {
                         zoom(14.0)
@@ -162,7 +161,7 @@ fun MapScreen(
                                 .fillMaxSize()
                                 .padding(4.dp)
                                 .clip(RoundedCornerShape(14.dp))
-                                .background(Color(resources.getColor(R.color.green))),
+                                .background(Green),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(

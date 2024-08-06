@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    kotlin("kapt")
+    alias(libs.plugins.dagger)
 }
 
 android {
@@ -70,5 +72,19 @@ dependencies {
     implementation(libs.mapbox)
     implementation(libs.mapbox.extension)
     implementation(libs.location.services)
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.0")
+    implementation(libs.accompanist.permissions)
+
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+
+    //reflection-free flavor by kirich
+    implementation(libs.viewbinding.kirich)
+
+    //dagger-hilt
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
+}
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }
