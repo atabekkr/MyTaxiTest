@@ -1,4 +1,4 @@
-package com.atabekdev.mytaxitest
+package com.atabekdev.mytaxitest.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

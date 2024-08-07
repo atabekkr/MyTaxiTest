@@ -9,7 +9,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.atabekdev.mytaxitest.MainActivity
+import com.atabekdev.mytaxitest.ui.MainActivity
 import com.atabekdev.mytaxitest.R
 import com.atabekdev.mytaxitest.common.service.LocationService.Companion.CHANNEL_ID
 import com.atabekdev.mytaxitest.common.service.LocationService.Companion.ID

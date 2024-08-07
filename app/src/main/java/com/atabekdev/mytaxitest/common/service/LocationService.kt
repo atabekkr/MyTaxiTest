@@ -15,7 +15,7 @@ import androidx.core.content.PermissionChecker
 import com.atabekdev.mytaxitest.common.extensions.toTimeDateString
 import com.atabekdev.mytaxitest.common.locationnotification.LocationNotification
 import com.atabekdev.mytaxitest.data.models.UserLocation
-import com.atabekdev.mytaxitest.domain.usecase.AddLocationUseCase
+import com.atabekdev.mytaxitest.domain.usecase.LocationUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +30,7 @@ class LocationService : Service() {
     private val scope = CoroutineScope(Dispatchers.IO + job)
 
     @Inject
-    lateinit var addLocationUseCase: AddLocationUseCase
+    lateinit var addLocationUseCase: LocationUseCase
 
     @Inject
     lateinit var notification: LocationNotification

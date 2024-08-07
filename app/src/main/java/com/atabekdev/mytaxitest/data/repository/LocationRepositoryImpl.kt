@@ -1,19 +1,19 @@
 package com.atabekdev.mytaxitest.data.repository
 
-import com.atabekdev.mytaxitest.data.dao.LocationDao
 import com.atabekdev.mytaxitest.data.models.UserLocation
+import com.atabekdev.mytaxitest.data.source.LocalDataSource
 import com.atabekdev.mytaxitest.domain.repository.LocationRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class LocationRepositoryImpl @Inject constructor(
-    private val dao: LocationDao
-): LocationRepository {
+    private val dataSource: LocalDataSource,
+) : LocationRepository {
     override suspend fun addLocation(location: UserLocation) {
-        dao.addLocation(location)
+        dataSource.addLocation(location)
     }
 
     override fun getAllLocations(): Flow<List<UserLocation>> {
-        return dao.getAllLocations()
+        return dataSource.getAllLocations()
     }
 }

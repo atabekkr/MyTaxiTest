@@ -2,7 +2,6 @@ package com.atabekdev.mytaxitest.ui.screens
 
 import android.Manifest
 import android.content.Context
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -48,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.atabekdev.mytaxitest.R
+import com.atabekdev.mytaxitest.ui.intent.LocationIntent
 import com.atabekdev.mytaxitest.common.extensions.hasLocationPermission
 import com.atabekdev.mytaxitest.common.extensions.startLocationService
 import com.atabekdev.mytaxitest.ui.components.AddMarker
@@ -76,6 +76,10 @@ fun MapScreen(
         bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = false)
     )
 
+    LaunchedEffect(locationViewModel) {
+        locationViewModel.handleIntent(LocationIntent.GetLocations)
+    }
+
     val latestLocation = locationViewModel.lastLocation.collectAsState()
     val latestPoint =
         latestLocation.value?.let { Point.fromLngLat(it.lng, it.lat) }
@@ -89,7 +93,6 @@ fun MapScreen(
         }
     }
     val mapViewportState = rememberMapViewportState {
-        // Set the initial camera position
         setCameraOptions {
             center(latestPoint ?: initialPoint)
             zoom(14.0)
@@ -133,7 +136,6 @@ fun MapScreen(
                     .fillMaxSize(),
                 mapViewportState = mapViewportState,
                 onMapClickListener = {
-                    Log.d("TTTT", "Click!")
                     coroutineScope.launch {
                         if (scaffoldState.bottomSheetState.hasExpandedState) {
                             scaffoldState.bottomSheetState.partialExpand()
