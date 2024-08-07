@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    kotlin("kapt")
+    alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.dagger)
 }
 
@@ -76,16 +76,12 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
 
     //reflection-free flavor by kirich
     implementation(libs.viewbinding.kirich)
 
     //dagger-hilt
     implementation(libs.dagger)
-    kapt(libs.dagger.compiler)
-}
-// Allow references to generated code
-kapt {
-    correctErrorTypes = true
+    ksp(libs.dagger.compiler)
 }
