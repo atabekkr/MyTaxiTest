@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.accompanist.permissions)
 
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
 
     //reflection-free flavor by kirich

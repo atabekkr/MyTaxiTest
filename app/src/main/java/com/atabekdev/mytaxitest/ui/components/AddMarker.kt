@@ -12,7 +12,7 @@ import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 
 @OptIn(MapboxExperimental::class)
 @Composable
-fun AddPointer(point: Point, resources: Resources) {
+fun AddMarker(point: Point, resources: Resources) {
     val drawable = ResourcesCompat.getDrawable(
         resources,
         R.drawable.marker_car,

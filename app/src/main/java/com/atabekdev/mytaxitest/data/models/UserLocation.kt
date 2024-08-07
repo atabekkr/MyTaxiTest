@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "userLocation")
-data class LatLngPlace(
+data class UserLocation(
     @ColumnInfo(name = "lat") val lat: Double,
     @ColumnInfo(name = "lng") val lng: Double,
     @PrimaryKey @ColumnInfo(name = "stored_at") val storedAt: String

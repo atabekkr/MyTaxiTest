@@ -10,10 +10,9 @@ import android.location.LocationManager
 import android.util.Log
 import com.atabekdev.mytaxitest.common.extensions.toTimeDateString
 import com.atabekdev.mytaxitest.common.locationnotification.LocationNotification
-import com.atabekdev.mytaxitest.data.models.LatLngPlace
+import com.atabekdev.mytaxitest.data.models.UserLocation
 import com.atabekdev.mytaxitest.domain.usecase.AddLocationUseCase
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -27,15 +26,16 @@ class LocationService : Service() {
         const val ACTION_START = "actionStart"
         const val ACTION_STOP = "actionStop"
 
-        const val INTERVAL: Long = 5 * 1000
-        const val SMALLEST_DISTANCE: Float = 5f
+        const val INTERVAL: Long = 3 * 1000
+        const val SMALLEST_DISTANCE: Float = 1f
     }
 
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + job)
 
-//    @Inject
-//    lateinit var addLocationUseCase: AddLocationUseCase
+    @Inject
+    lateinit var addLocationUseCase: AddLocationUseCase
+
     @Inject
     lateinit var notification: LocationNotification
 
@@ -51,6 +51,9 @@ class LocationService : Service() {
         locManager?.requestLocationUpdates(
             LocationManager.GPS_PROVIDER, INTERVAL, SMALLEST_DISTANCE, locListener
         )
+        locManager?.requestLocationUpdates(
+            LocationManager.NETWORK_PROVIDER, INTERVAL, SMALLEST_DISTANCE, locListener
+        )
 
     }
 
@@ -63,6 +66,7 @@ class LocationService : Service() {
     }
 
     private fun startForeground() {
+        Log.d("TTTT", "startw")
         startForeground(LocationNotification.ID, notification.createNotification())
     }
 
@@ -79,13 +83,13 @@ class LocationService : Service() {
             )
             scope.launch {
                 val currentTime = System.currentTimeMillis().toTimeDateString()
-//                addLocationUseCase.addLocation(
-//                    LatLngPlace(
-//                        lat = loc.latitude,
-//                        lng = loc.longitude,
-//                        storedAt = currentTime
-//                    )
-//                )
+                addLocationUseCase.addLocation(
+                    UserLocation(
+                        lat = loc.latitude,
+                        lng = loc.longitude,
+                        storedAt = currentTime
+                    )
+                )
             }
         }
 
