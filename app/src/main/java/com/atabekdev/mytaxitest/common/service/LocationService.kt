@@ -1,13 +1,17 @@
 package com.atabekdev.mytaxitest.common.service
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.util.Log
+import android.os.Build
+import androidx.core.app.ServiceCompat
+import androidx.core.content.PermissionChecker
 import com.atabekdev.mytaxitest.common.extensions.toTimeDateString
 import com.atabekdev.mytaxitest.common.locationnotification.LocationNotification
 import com.atabekdev.mytaxitest.data.models.UserLocation
@@ -21,14 +25,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class LocationService : Service() {
-
-    companion object {
-        const val ACTION_START = "actionStart"
-        const val ACTION_STOP = "actionStop"
-
-        const val INTERVAL: Long = 3 * 1000
-        const val SMALLEST_DISTANCE: Float = 1f
-    }
 
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + job)
@@ -45,8 +41,6 @@ class LocationService : Service() {
     override fun onCreate() {
         super.onCreate()
 
-        notification.createChannel()
-
         locManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         locManager?.requestLocationUpdates(
             LocationManager.GPS_PROVIDER, INTERVAL, SMALLEST_DISTANCE, locListener
@@ -58,21 +52,35 @@ class LocationService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        when (intent?.action) {
-            ACTION_START -> startForeground()
-            ACTION_STOP -> stop()
-        }
-        return START_STICKY
+
+        startForeground()
+        return super.onStartCommand(intent, flags, startId)
+
     }
 
     private fun startForeground() {
-        Log.d("TTTT", "startw")
-        startForeground(LocationNotification.ID, notification.createNotification())
-    }
+        val locationPermission =
+            PermissionChecker.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (locationPermission != PermissionChecker.PERMISSION_GRANTED) {
+            stopSelf()
+            return
+        }
 
-    private fun stop() {
-        stopForeground(STOP_FOREGROUND_REMOVE)
-        stopSelf()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notification.createChannel()
+        }
+
+        ServiceCompat.startForeground(
+            /* service = */ this,
+            /* id = */ ID, // Cannot be 0
+            /* notification = */ notification.createNotification(),
+            /* foregroundServiceType = */
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
+            } else {
+                0
+            }
+        )
     }
 
     private var locManager: LocationManager? = null
@@ -96,5 +104,14 @@ class LocationService : Service() {
         override fun onProviderEnabled(provider: String) {}
 
         override fun onProviderDisabled(provider: String) {}
+    }
+
+    companion object {
+
+        const val INTERVAL: Long = 3 * 1000
+        const val SMALLEST_DISTANCE: Float = 1f
+        const val CHANNEL_ID = "location_channel"
+        const val ID = 100
+
     }
 }

@@ -11,18 +11,15 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.atabekdev.mytaxitest.MainActivity
 import com.atabekdev.mytaxitest.R
+import com.atabekdev.mytaxitest.common.service.LocationService.Companion.CHANNEL_ID
+import com.atabekdev.mytaxitest.common.service.LocationService.Companion.ID
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class LocationNotification @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val manager: NotificationManager
+    private val manager: NotificationManager,
 ) {
-
-    companion object {
-        private const val CHANNEL_ID = "location_channel"
-        const val ID = 1
-    }
 
     private val builder: NotificationCompat.Builder by lazy {
 
@@ -44,7 +41,7 @@ class LocationNotification @Inject constructor(
         NotificationChannel(
             CHANNEL_ID,
             context.getString(R.string.location_tracker),
-            NotificationManager.IMPORTANCE_LOW
+            NotificationManager.IMPORTANCE_DEFAULT
         ).apply {
             description = context.getString(R.string.location_tracker_description)
             manager.createNotificationChannel(this)

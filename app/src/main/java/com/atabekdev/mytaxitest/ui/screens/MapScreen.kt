@@ -1,7 +1,10 @@
 package com.atabekdev.mytaxitest.ui.screens
 
-import android.content.res.Resources
+import android.Manifest
+import android.content.Context
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -32,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -44,6 +48,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.atabekdev.mytaxitest.R
+import com.atabekdev.mytaxitest.common.extensions.hasLocationPermission
+import com.atabekdev.mytaxitest.common.extensions.startLocationService
 import com.atabekdev.mytaxitest.ui.components.AddMarker
 import com.atabekdev.mytaxitest.ui.components.LiftBottomSheetCard
 import com.atabekdev.mytaxitest.ui.components.MainCard
@@ -63,11 +69,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
+    context: Context,
     locationViewModel: LocationViewModel,
-    initialPoint: Point,
-    resources: Resources,
 ) {
-
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = false)
     )
@@ -75,6 +79,7 @@ fun MapScreen(
     val latestLocation = locationViewModel.lastLocation.collectAsState()
     val latestPoint =
         latestLocation.value?.let { Point.fromLngLat(it.lng, it.lat) }
+    val initialPoint = Point.fromLngLat(-98.0, 39.5)
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -90,6 +95,23 @@ fun MapScreen(
             zoom(14.0)
             pitch(0.0)
             bearing(0.0)
+        }
+    }
+
+    val requestPermissionLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+            onResult = { isGranted: Boolean ->
+                if (isGranted) {
+                    context.startLocationService()
+                }
+            })
+
+    LaunchedEffect(Unit) {
+        if (!context.hasLocationPermission()) {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        } else {
+            context.startLocationService()
         }
     }
 
@@ -125,7 +147,7 @@ fun MapScreen(
                     if (isSystemInDarkTheme()) MapStyle(style = Style.DARK) else MapStyle(style = Style.TRAFFIC_DAY)
                 },
             ) {
-                AddMarker(latestPoint ?: initialPoint, resources = resources)
+                AddMarker(latestPoint ?: initialPoint, resources = context.resources)
             }
             Column(
                 Modifier.fillMaxSize(),
