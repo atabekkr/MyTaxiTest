@@ -10,14 +10,11 @@ activityCompose = "1.9.1"
 composeBom = "2024.04.01"
 mapboxVersion = "11.5.1"
 locationServiceVersion = "21.0.1"
-accompanistPermissions = "0.35.0-alpha"
-kirich = "1.5.9"
 daggerHiltVersion = "2.51.1"
 roomVersion = "2.6.1"
 kspVersion = "1.9.10-1.0.13"
 
 [libraries]
-accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-room-ktx = { group = "androidx.room",name ="room-ktx", version.ref = "roomVersion" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomVersion" }
@@ -38,7 +35,6 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 mapbox = { group = "com.mapbox.maps", name = "android", version.ref = "mapboxVersion" }
 mapbox-extension = { group = "com.mapbox.extension", name = "maps-compose", version.ref = "mapboxVersion" }
 location-services = { group = "com.google.android.gms", name = "play-services-location", version.ref = "locationServiceVersion" }
-viewbinding-kirich = { group = "com.github.kirich1409", name = "viewbindingpropertydelegate-noreflection", version.ref = "kirich" }
 dagger = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHiltVersion" }
 dagger-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "daggerHiltVersion" }
 

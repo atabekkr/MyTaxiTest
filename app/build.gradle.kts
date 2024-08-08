@@ -72,14 +72,10 @@ dependencies {
     implementation(libs.mapbox)
     implementation(libs.mapbox.extension)
     implementation(libs.location.services)
-    implementation(libs.accompanist.permissions)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
-
-    //reflection-free flavor by kirich
-    implementation(libs.viewbinding.kirich)
 
     //dagger-hilt
     implementation(libs.dagger)
