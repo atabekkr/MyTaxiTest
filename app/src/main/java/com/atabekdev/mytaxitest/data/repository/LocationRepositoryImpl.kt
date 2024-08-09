@@ -13,7 +13,7 @@ class LocationRepositoryImpl @Inject constructor(
         dataSource.addLocation(location)
     }
 
-    override fun getAllLocations(): Flow<List<UserLocation>> {
-        return dataSource.getAllLocations()
+    override fun getLastAddedLocation(): Flow<UserLocation> {
+        return dataSource.getLastAddedLocation()
     }
 }

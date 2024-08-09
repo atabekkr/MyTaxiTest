@@ -7,6 +7,6 @@ interface LocationRepository {
 
     suspend fun addLocation(location: UserLocation)
 
-    fun getAllLocations(): Flow<List<UserLocation>>
+    fun getLastAddedLocation(): Flow<UserLocation>
 
 }

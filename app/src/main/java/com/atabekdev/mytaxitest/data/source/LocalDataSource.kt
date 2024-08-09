@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface LocalDataSource {
 
     suspend fun addLocation(location: UserLocation)
-    fun getAllLocations(): Flow<List<UserLocation>>
+    fun getLastAddedLocation(): Flow<UserLocation>
 
 }

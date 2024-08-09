@@ -2,9 +2,9 @@ package com.atabekdev.mytaxitest.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.atabekdev.mytaxitest.ui.intent.LocationIntent
 import com.atabekdev.mytaxitest.data.models.UserLocation
 import com.atabekdev.mytaxitest.domain.usecase.LocationUseCase
+import com.atabekdev.mytaxitest.ui.intent.LocationIntent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,14 +22,14 @@ class LocationViewModel @Inject constructor(
     fun handleIntent(intent: LocationIntent) {
         viewModelScope.launch {
             when (intent) {
-                is LocationIntent.GetLocations -> getLastLocation()
+                is LocationIntent.GetLocations -> getLastAddedLocation()
                 // ... Other Intents goes here...
             }
         }
     }
 
-    private suspend fun getLastLocation() {
-        useCase.getLatestLocation().collect { location ->
+    private suspend fun getLastAddedLocation() {
+        useCase.getLastAddedLocation().collect { location ->
             _lastLocation.value = location
         }
     }

@@ -13,7 +13,7 @@ class LocalDataSourceImpl @Inject constructor(
         dao.addLocation(location)
     }
 
-    override fun getAllLocations(): Flow<List<UserLocation>> {
-        return dao.getAllLocations()
+    override fun getLastAddedLocation(): Flow<UserLocation> {
+        return dao.getLastAddedLocation()
     }
 }

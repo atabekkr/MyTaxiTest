@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocationUseCase {
     suspend fun addLocation(location: UserLocation)
-    fun getLatestLocation(): Flow<UserLocation>
+    fun getLastAddedLocation(): Flow<UserLocation>
 }
