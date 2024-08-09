@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,13 +16,16 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.atabekdev.mytaxitest.R
 import com.atabekdev.mytaxitest.ui.theme.Green
+import com.atabekdev.mytaxitest.ui.theme.White90
 
 @Composable
 fun Controller(resId: Int, onClick: () -> Unit) {
@@ -77,15 +81,20 @@ fun LiftBottomSheetCard(onClick: () -> Unit) {
 @Composable
 fun HamburgerCard() {
     Card(
-        modifier = Modifier
-            .size(56.dp),
+        modifier = Modifier.size(56.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background,
         ),
         shape = RoundedCornerShape(14.dp),
     ) {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(
+                    onClick = {},
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = rememberRipple(color = MaterialTheme.colorScheme.onSecondary)
+                ),
             contentAlignment = Alignment.Center
         ) {
             Image(
@@ -104,15 +113,18 @@ fun Card95() {
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background,
         ),
-        shape = RoundedCornerShape(14.dp),
-        onClick = {}
+        shape = RoundedCornerShape(14.dp)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(4.dp)
                 .clip(RoundedCornerShape(14.dp))
-                .background(Green),
+                .background(Green).clickable(
+                    onClick = {},
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = rememberRipple(color = MaterialTheme.colorScheme.onSecondary)
+                ),
             contentAlignment = Alignment.Center
         ) {
             Text(
