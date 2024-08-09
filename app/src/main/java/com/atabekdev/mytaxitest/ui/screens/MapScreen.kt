@@ -41,11 +41,11 @@ import com.atabekdev.mytaxitest.R
 import com.atabekdev.mytaxitest.common.extensions.hasLocationPermission
 import com.atabekdev.mytaxitest.common.extensions.startLocationService
 import com.atabekdev.mytaxitest.ui.components.AddMarker
+import com.atabekdev.mytaxitest.ui.components.BottomSheetContent
 import com.atabekdev.mytaxitest.ui.components.Card95
 import com.atabekdev.mytaxitest.ui.components.Controller
 import com.atabekdev.mytaxitest.ui.components.HamburgerCard
 import com.atabekdev.mytaxitest.ui.components.LiftBottomSheetCard
-import com.atabekdev.mytaxitest.ui.components.SheetContent
 import com.atabekdev.mytaxitest.ui.components.SwitchStatus
 import com.atabekdev.mytaxitest.ui.intent.LocationIntent
 import com.atabekdev.mytaxitest.ui.viewmodel.LocationViewModel
@@ -116,8 +116,8 @@ fun MapScreen(
         scaffoldState = scaffoldState,
         sheetContainerColor = Color.Transparent,
         sheetShadowElevation = 0.dp,
-        sheetContent = { SheetContent() },
-        sheetPeekHeight = 200.dp, // Adjust this value to set initial peek height
+        sheetContent = { BottomSheetContent() },
+        sheetPeekHeight = 200.dp,
         sheetDragHandle = { BottomSheetDefaults.DragHandle(modifier = Modifier.padding(top = 30.dp)) }
     ) {
         Box(

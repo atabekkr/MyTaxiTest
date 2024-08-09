@@ -25,7 +25,7 @@ import com.atabekdev.mytaxitest.R
 
 @Preview
 @Composable
-fun SheetContent() {
+fun BottomSheetContent() {
     Box(
         modifier = Modifier
             .fillMaxWidth()

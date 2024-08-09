@@ -22,7 +22,6 @@
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@style/Theme.MyTaxiTest">
             <intent-filter>
@@ -34,7 +33,6 @@
         <service
             android:name=".common.service.LocationService"
             android:exported="false"
-            android:foregroundServiceType="location"
-            />
+            android:foregroundServiceType="location" />
     </application>
 </manifest>
