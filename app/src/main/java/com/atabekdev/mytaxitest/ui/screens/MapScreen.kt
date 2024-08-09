@@ -9,8 +9,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,16 +19,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -42,31 +34,33 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.atabekdev.mytaxitest.R
-import com.atabekdev.mytaxitest.ui.intent.LocationIntent
 import com.atabekdev.mytaxitest.common.extensions.hasLocationPermission
 import com.atabekdev.mytaxitest.common.extensions.startLocationService
 import com.atabekdev.mytaxitest.ui.components.AddMarker
+import com.atabekdev.mytaxitest.ui.components.Card95
+import com.atabekdev.mytaxitest.ui.components.Controller
+import com.atabekdev.mytaxitest.ui.components.HamburgerCard
 import com.atabekdev.mytaxitest.ui.components.LiftBottomSheetCard
-import com.atabekdev.mytaxitest.ui.components.MainCard
 import com.atabekdev.mytaxitest.ui.components.SheetContent
 import com.atabekdev.mytaxitest.ui.components.SwitchStatus
-import com.atabekdev.mytaxitest.ui.theme.Green
+import com.atabekdev.mytaxitest.ui.intent.LocationIntent
 import com.atabekdev.mytaxitest.ui.viewmodel.LocationViewModel
 import com.mapbox.geojson.Point
+import com.mapbox.maps.MapboxExperimental
 import com.mapbox.maps.Style
 import com.mapbox.maps.dsl.cameraOptions
+import com.mapbox.maps.extension.compose.ComposeMapInitOptions
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.style.MapStyle
 import com.mapbox.maps.plugin.animation.MapAnimationOptions
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, MapboxExperimental::class)
 @Composable
 fun MapScreen(
     context: Context,
@@ -126,7 +120,6 @@ fun MapScreen(
         sheetPeekHeight = 200.dp, // Adjust this value to set initial peek height
         sheetDragHandle = { BottomSheetDefaults.DragHandle(modifier = Modifier.padding(top = 30.dp)) }
     ) {
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -134,6 +127,10 @@ fun MapScreen(
             MapboxMap(
                 Modifier
                     .fillMaxSize(),
+                composeMapInitOptions = ComposeMapInitOptions(
+                    LocalDensity.current.density,
+                    textureView = true
+                ),
                 mapViewportState = mapViewportState,
                 onMapClickListener = {
                     coroutineScope.launch {
@@ -148,6 +145,10 @@ fun MapScreen(
                 style = {
                     if (isSystemInDarkTheme()) MapStyle(style = Style.DARK) else MapStyle(style = Style.TRAFFIC_DAY)
                 },
+                compass = {},
+                logo = {},
+                scaleBar = {},
+                attribution = {},
             ) {
                 AddMarker(latestPoint ?: initialPoint, resources = context.resources)
             }
@@ -162,52 +163,13 @@ fun MapScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Card(
-                        modifier = Modifier.size(56.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.background,
-                        ),
-                        shape = RoundedCornerShape(14.dp),
-                        onClick = {}
-                    ) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Image(
-                                modifier = Modifier.size(24.dp),
-                                painter = painterResource(id = R.drawable.ic_menu),
-                                contentDescription = "img1"
-                            )
-                        }
-                    }
+                    HamburgerCard()
                     SwitchStatus(
                         modifier = Modifier
                             .weight(1f)
                             .padding(horizontal = 8.dp)
                     )
-                    Card(
-                        modifier = Modifier.size(56.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.background,
-                        ),
-                        shape = RoundedCornerShape(14.dp),
-                        onClick = {}
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(4.dp)
-                                .clip(RoundedCornerShape(14.dp))
-                                .background(Green),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "95",
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
-                    }
+                    Card95()
                 }
                 Spacer(modifier = Modifier.height(200.dp))
                 Row(
@@ -235,11 +197,42 @@ fun MapScreen(
                         exit = slideOutHorizontally { -it / 2 } + fadeOut()
                     ) {
                         Column {
-                            MainCard(R.drawable.ic_plus)
+                            val currentZoom = mapViewportState.cameraState?.zoom ?: 14.0
+                            Controller(R.drawable.ic_plus) {
+                                mapViewportState.flyTo(
+                                    cameraOptions = cameraOptions {
+                                        center(latestPoint)
+                                        zoom(currentZoom + 1.0)
+                                        pitch(0.0)
+                                        bearing(0.0)
+                                    },
+                                    MapAnimationOptions.mapAnimationOptions { duration(500) }
+                                )
+                            }
                             Spacer(modifier = Modifier.height(16.dp))
-                            MainCard(R.drawable.ic_minus)
+                            Controller(R.drawable.ic_minus) {
+                                mapViewportState.flyTo(
+                                    cameraOptions = cameraOptions {
+                                        center(latestPoint)
+                                        zoom(currentZoom - 1.0)
+                                        pitch(0.0)
+                                        bearing(0.0)
+                                    },
+                                    MapAnimationOptions.mapAnimationOptions { duration(500) }
+                                )
+                            }
                             Spacer(modifier = Modifier.height(16.dp))
-                            MainCard(R.drawable.ic_navigation)
+                            Controller(R.drawable.ic_navigation) {
+                                mapViewportState.flyTo(
+                                    cameraOptions = cameraOptions {
+                                        center(latestPoint ?: initialPoint)
+                                        zoom(currentZoom)
+                                        pitch(0.0)
+                                        bearing(0.0)
+                                    },
+                                    MapAnimationOptions.mapAnimationOptions { duration(1000) }
+                                )
+                            }
                         }
                     }
                 }
